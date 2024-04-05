@@ -1,0 +1,27 @@
+stages:
+  - build
+  - teste-automatizado
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+default:
+  cache:
+    paths:
+      - .m2/repository/
+
+"Testes Automatizados (Integração)":
+  stage: teste-automatizado
+  script:
+    - mvn test
+  artifacts:
+    when: always
+    paths:
+      - target/
+    exclude:
+      - target/*.jar
+    reports:
+      junit: target/surefire-reports/*.xml
+    expire_in: 1 hours
+  tags:
+    - autoscaling_uat
